@@ -1,0 +1,60 @@
+name: Daily Tech News Agent
+
+on:
+  # Runs at 07:00 UTC every day (adjust to your timezone)
+  schedule:
+    - cron: "0 7 * * *"
+
+  # Allow manual trigger from GitHub Actions UI (for testing)
+  workflow_dispatch:
+
+jobs:
+  run-agent:
+    name: Run News Agent
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci --production
+
+      - name: Run Daily Tech News Agent
+        env:
+          # ── AI ──────────────────────────────────────────────────────────────
+          AI_PROVIDER: ${{ secrets.AI_PROVIDER }}
+          AI_API_KEY: ${{ secrets.AI_API_KEY }}
+          OPENROUTER_MODEL: ${{ secrets.OPENROUTER_MODEL }}
+          GEMINI_MODEL: ${{ secrets.GEMINI_MODEL }}
+
+          # ── Email ────────────────────────────────────────────────────────────
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+
+          # ── Database ─────────────────────────────────────────────────────────
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+          # ── Optional ─────────────────────────────────────────────────────────
+          TOP_ARTICLES_COUNT: ${{ vars.TOP_ARTICLES_COUNT }}
+          MAX_ARTICLE_AGE_HOURS: ${{ vars.MAX_ARTICLE_AGE_HOURS }}
+          LOG_LEVEL: info
+
+        run: node src/worker.js
+
+      - name: Upload run log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-failure-log-${{ github.run_id }}
+          path: "*.log"
+          if-no-files-found: ignore
+          retention-days: 7

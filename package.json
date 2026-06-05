@@ -1,0 +1,25 @@
+{
+  "name": "daily-tech-news-agent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/worker.js",
+  "scripts": {
+    "start": "node src/worker.js",
+    "dev": "node --watch src/worker.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "dependencies": {
+    "@ai-sdk/google": "^3.0.80",
+    "@openrouter/ai-sdk-provider": "^2.9.0",
+    "ai": "^6.0.197",
+    "crypto": "^1.0.1",
+    "dotenv": "^17.4.2",
+    "node-fetch": "^3.3.2",
+    "pg": "^8.21.0",
+    "resend": "^6.12.4",
+    "rss-parser": "^3.13.0"
+  }
+}
