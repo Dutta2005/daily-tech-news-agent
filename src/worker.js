@@ -6,6 +6,9 @@ import { summarizeAndFilter } from './services/aiService.js';
 import { formatEmail } from './services/formatter.js';
 import { sendEmail } from './services/emailService.js';
 import { rankArticles } from './utils/scorer.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 function validateEnv() {
     const required = ['AI_API_KEY', 'RESEND_API_KEY', 'DB_URL', 'EMAIL_TO'];
