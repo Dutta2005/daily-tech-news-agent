@@ -159,7 +159,7 @@ GitHub Actions (cron)
 
 ---
 
-## 🛠 Customization
+## Customization
 
 ### Add More RSS Sources
 
@@ -217,4 +217,4 @@ TRUNCATE articles;
 → Check Resend dashboard for delivery status. Ensure `EMAIL_FROM` domain is verified in Resend.
 
 **Database connection error**
-→ Ensure `DATABASE_URL` includes `?sslmode=require` if your Insforge instance requires SSL.
+→ Ensure `DB_URL` includes `?sslmode=require` if your Insforge instance requires SSL.
