@@ -41,7 +41,7 @@ jobs:
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
 
           # ── Database ─────────────────────────────────────────────────────────
-          DATABASE_URL: ${{ secrets.DB_URL }}
+          DB_URL: ${{ secrets.DB_URL }}
 
           # ── Optional ─────────────────────────────────────────────────────────
           TOP_ARTICLES_COUNT: ${{ vars.TOP_ARTICLES_COUNT }}
