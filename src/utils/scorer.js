@@ -1,10 +1,10 @@
 const KEYWORD_WEIGHTS = [
   { weight: 10, terms: ['ai', 'artificial intelligence', 'llm', 'gpt', 'gemini', 'openai', 'anthropic', 'claude', 'machine learning', 'deep learning'] },
-  { weight: 8,  terms: ['startup', 'funding', 'series a', 'series b', 'ipo', 'acquisition', 'unicorn', 'raised'] },
-  { weight: 7,  terms: ['developer tools', 'open source', 'github', 'api', 'sdk', 'framework', 'release', 'launch'] },
-  { weight: 5,  terms: ['security', 'breach', 'vulnerability', 'privacy', 'regulation', 'law'] },
-  { weight: 4,  terms: ['apple', 'google', 'microsoft', 'meta', 'amazon', 'nvidia', 'tesla'] },
-  { weight: 2,  terms: ['cloud', 'saas', 'infrastructure', 'kubernetes', 'docker'] },
+  { weight: 8, terms: ['developer tools', 'open source', 'github', 'api', 'sdk', 'framework', 'release', 'launch'] },
+  { weight: 7, terms: ['security', 'breach', 'vulnerability', 'privacy', 'regulation', 'law'] },
+  { weight: 5, terms: ['startup', 'funding', 'series a', 'series b', 'ipo', 'acquisition', 'unicorn', 'raised'] },
+  { weight: 4, terms: ['apple', 'google', 'microsoft', 'meta', 'amazon', 'nvidia', 'tesla'] },
+  { weight: 2, terms: ['cloud', 'saas', 'infrastructure', 'kubernetes', 'docker'] },
 ];
 
 const HN_SCORE_DIVISOR = 100;

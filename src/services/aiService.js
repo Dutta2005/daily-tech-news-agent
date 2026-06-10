@@ -67,7 +67,7 @@ ${JSON.stringify(articlesJson, null, 2)}
  
 INSTRUCTIONS:
 1. Select the top ${TOP_N} most important and interesting stories.
-2. Prioritize in this order: AI/ML breakthroughs > Startup funding/acquisitions > Developer tools/OSS releases > Security/Privacy > Big Tech news.
+2. Prioritize in this order: AI/ML breakthroughs > Developer tools/OSS releases > Security/Privacy > Startup funding/acquisitions >  Big Tech news.
 3. Remove duplicate or highly similar stories — keep only the best version.
 4. For each selected story, write a 2–3 sentence summary that is informative, neutral, and engaging.
 5. Do NOT include stories that are opinion pieces, listicles, or promotional content unless they are genuinely important.
