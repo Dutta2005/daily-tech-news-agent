@@ -11,7 +11,7 @@ async function buildModel() {
     if (provider === 'gemini') {
         const { createGoogleGenerativeAI } = await import('@ai-sdk/google');
         const google = createGoogleGenerativeAI({ apiKey: AI_API_KEY });
-        const modelId = GEMINI_MODEL || 'gemini-2.5-flash';
+        const modelId = GEMINI_MODEL || 'gemini-flash-lite-latest';
         logger.info(`[ai] Using Gemini → ${modelId}`);
         return google(modelId);
     }

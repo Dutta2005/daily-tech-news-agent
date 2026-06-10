@@ -13,12 +13,6 @@ const RSS_SOURCES = [
     { name: 'Ars Technica', url: 'https://feeds.arstechnica.com/arstechnica/technology-lab' },
 ];
 
-const GITHUB_TRENDING_FEEDS = [
-    { lang: 'all', url: 'https://github-rss.alexi.sh/trending/daily/any/any.rss' },
-    { lang: 'javascript', url: 'https://github-rss.alexi.sh/trending/daily/javascript/any.rss' },
-    { lang: 'python', url: 'https://github-rss.alexi.sh/trending/daily/python/any.rss' },
-    { lang: 'typescript', url: 'https://github-rss.alexi.sh/trending/daily/typescript/any.rss' },
-];
 
 function normalizeArticle(raw) {
     return {
@@ -152,54 +146,6 @@ async function fetchHackerNews() {
 }
 
 async function fetchGitHubTrending() {
-    const settled = await Promise.allSettled(GITHUB_TRENDING_FEEDS.map(fetchGitHubFeed));
-
-    const seen = new Set();
-    const repos = [];
-
-    for (const r of settled) {
-        if (r.status !== 'fulfilled') continue;
-        for (const repo of r.value) {
-            if (!seen.has(repo.link)) {
-                seen.add(repo.link);
-                repos.push(repo);
-            }
-        }
-    }
-
-    if (repos.length > 0) return repos;
-
-    logger.warn('[fetcher] GitHub RSS proxy failed — falling back to HTML scrape');
-    return fetchGitHubTrendingFallback();
-}
-
-async function fetchGitHubFeed({ lang, url }) {
-    return withRetry(
-        async () => {
-            const feed = await parser.parseURL(url);
-            return feed.items.map((item) => {
-                const repoPath = item.link?.replace('https://github.com/', '') ?? '';
-                const [owner, repo] = repoPath.split('/');
-                const description = stripHtml(item.contentSnippet || item.content || item.summary || '')
-                    .replace(/\n+/g, ' ')
-                    .trim()
-                    .slice(0, 300);
-
-                return normalizeArticle({
-                    title: item.title?.trim() ?? repoPath,
-                    link: item.link,
-                    description: description || `Trending ${lang !== 'all' ? lang + ' ' : ''}repository on GitHub`,
-                    source: 'GitHub Trending',
-                    publishedAt: null,
-                    hnScore: 0,
-                });
-            });
-        },
-        { attempts: 2, baseDelayMs: 1000, label: `GitHub:${lang}` }
-    );
-}
-
-async function fetchGitHubTrendingFallback() {
     return withRetry(
         async () => {
             const { default: fetch } = await import('node-fetch');
@@ -211,32 +157,33 @@ async function fetchGitHubTrendingFallback() {
             if (!res.ok) throw new Error(`GitHub Trending returned ${res.status}`);
             const html = await res.text();
 
-            const repoPattern = /<h2[^>]*>\s*<a\s+href="\/([^"]+)"[^>]*>([\s\S]*?)<\/a>/g;
-            const descPattern = /<p[^>]*class="[^"]*col-9[^"]*"[^>]*>([\s\S]*?)<\/p>/g;
+            const articlePattern = /<article class="Box-row">([\s\S]*?)<\/article>/g;
 
             const repos = [];
             let match;
-            const titles = [];
 
-            while ((match = repoPattern.exec(html)) !== null) {
-                const path = match[1].trim();
-                const title = stripHtml(match[2]).replace(/\s+/g, ' ').trim();
-                if (path.includes('/') && !path.startsWith('trending')) {
-                    titles.push({ path, title });
-                }
-            }
+            while ((match = articlePattern.exec(html)) !== null && repos.length < 25) {
+                const art = match[1];
 
-            const descs = [];
-            while ((match = descPattern.exec(html)) !== null) {
-                descs.push(stripHtml(match[1]).trim());
-            }
+                const h2Match = /<h2[^>]*>([\s\S]*?)<\/h2>/.exec(art);
+                if (!h2Match) continue;
+                const h2Content = h2Match[1];
 
-            for (let i = 0; i < Math.min(titles.length, 25); i++) {
-                const { path, title } = titles[i];
+                const h2LinkMatch = /href="\/([\w.-]+\/[\w.-]+)"/.exec(h2Content);
+                if (!h2LinkMatch) continue;
+                const path = h2LinkMatch[1];
+
+                const title = h2Content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+
+                const descMatch = /<p[^>]*class="[^"]*col-9[^"]*"[^>]*>([\s\S]*?)<\/p>/.exec(art);
+                const description = descMatch
+                    ? stripHtml(descMatch[1]).trim().slice(0, 300)
+                    : 'Trending repository on GitHub today';
+
                 repos.push(normalizeArticle({
                     title: title || path,
                     link: `https://github.com/${path}`,
-                    description: descs[i] || 'Trending repository on GitHub today',
+                    description,
                     source: 'GitHub Trending',
                     publishedAt: null,
                     hnScore: 0,
@@ -245,6 +192,6 @@ async function fetchGitHubTrendingFallback() {
 
             return repos;
         },
-        { attempts: 3, baseDelayMs: 2000, label: 'GitHub:fallback' }
+        { attempts: 3, baseDelayMs: 2000, label: 'GitHub' }
     );
 }

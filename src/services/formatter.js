@@ -24,12 +24,12 @@ export function formatEmail(articles) {
 
     /* Header */
     .header {
-      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-      border-radius: 12px 12px 0 0;
+      background: #0f172a;
+      border-radius: 8px 8px 0 0;
       padding: 36px 40px;
       text-align: center;
+      border-bottom: 3px solid #3b82f6;
     }
-    .header-emoji { font-size: 40px; margin-bottom: 12px; }
     .header h1 {
       color: #ffffff;
       font-size: 26px;
@@ -37,18 +37,20 @@ export function formatEmail(articles) {
       letter-spacing: -0.3px;
     }
     .header .subtitle {
-      color: #a8b4d8;
+      color: #94a3b8;
       font-size: 14px;
       margin-top: 6px;
     }
     .header .date-badge {
       display: inline-block;
-      background: rgba(255,255,255,0.12);
-      color: #c9d4f0;
-      border-radius: 20px;
-      padding: 4px 14px;
-      font-size: 13px;
-      margin-top: 14px;
+      background: rgba(255,255,255,0.1);
+      color: #cbd5e1;
+      border-radius: 4px;
+      padding: 4px 12px;
+      font-size: 12px;
+      margin-top: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     /* Body container */
@@ -79,11 +81,11 @@ export function formatEmail(articles) {
       flex-shrink: 0;
       width: 28px;
       height: 28px;
-      background: #4f46e5;
-      color: #fff;
-      border-radius: 50%;
+      background: #f1f5f9;
+      color: #475569;
+      border-radius: 4px;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 600;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -92,14 +94,14 @@ export function formatEmail(articles) {
     .article-title {
       font-size: 17px;
       font-weight: 700;
-      color: #111827;
+      color: #0f172a;
       line-height: 1.4;
     }
-    .article-title a { color: #111827; text-decoration: none; }
-    .article-title a:hover { color: #4f46e5; }
+    .article-title a { color: #0f172a; text-decoration: none; }
+    .article-title a:hover { color: #2563eb; }
 
     .article-summary {
-      color: #4b5563;
+      color: #475569;
       font-size: 14px;
       line-height: 1.65;
       margin-left: 40px;
@@ -117,23 +119,24 @@ export function formatEmail(articles) {
       display: inline-flex;
       align-items: center;
       gap: 4px;
-      background: #f3f4f6;
-      color: #6b7280;
-      border-radius: 6px;
-      padding: 3px 10px;
+      background: #f1f5f9;
+      color: #64748b;
+      border-radius: 4px;
+      padding: 3px 8px;
       font-size: 12px;
       font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     .read-link {
       display: inline-block;
-      background: #4f46e5;
-      color: #ffffff !important;
+      color: #2563eb !important;
       text-decoration: none;
-      border-radius: 6px;
-      padding: 4px 14px;
       font-size: 13px;
       font-weight: 600;
-      letter-spacing: 0.2px;
+    }
+    .read-link:hover {
+      text-decoration: underline;
     }
 
     /* Footer */
@@ -141,7 +144,7 @@ export function formatEmail(articles) {
       background: #f9fafb;
       border: 1px solid #e5e7eb;
       border-top: none;
-      border-radius: 0 0 12px 12px;
+      border-radius: 0 0 8px 8px;
       padding: 24px 40px;
       text-align: center;
     }
@@ -153,10 +156,9 @@ export function formatEmail(articles) {
   <div class="wrapper">
     <!-- Header -->
     <div class="header">
-      <div class="header-emoji">🚀</div>
       <h1>Daily Tech Brief</h1>
-      <p class="subtitle">Your curated digest of what matters in tech — filtered by AI</p>
-      <span class="date-badge">📅 ${date}</span>
+      <p class="subtitle">Your curated digest of what matters in tech</p>
+      <span class="date-badge">${date}</span>
     </div>
 
     <!-- Body -->
@@ -171,9 +173,9 @@ export function formatEmail(articles) {
 
     <!-- Footer -->
     <div class="footer">
-      <p class="powered">⚡ Powered by Daily Tech News Agent</p>
-      <p>Sources: TechCrunch · The Verge · Ars Technica · Hacker News · Reddit r/technology</p>
-      <p>AI-curated and summarized · Delivered daily</p>
+      <p class="powered">Powered by Daily Tech News Agent</p>
+      <p>Sources: TechCrunch · The Verge · Ars Technica · Hacker News · Github trending</p>
+      <p>Curated and summarized · Delivered daily</p>
     </div>
   </div>
 </body>
@@ -183,8 +185,6 @@ export function formatEmail(articles) {
 
   return { html, text };
 }
-
-// ─── Helpers ───────────────────────────────────────────────────────────────────
 
 function renderArticle(article, num) {
   const escapedTitle = escapeHtml(article.title);
@@ -201,26 +201,26 @@ function renderArticle(article, num) {
         </div>
         <p class="article-summary">${escapedSummary}</p>
         <div class="article-meta">
-          <span class="source-badge">📰 ${escapedSource}</span>
-          <a class="read-link" href="${article.link}" target="_blank" rel="noopener noreferrer">Read →</a>
+          <span class="source-badge">${escapedSource}</span>
+          <a class="read-link" href="${article.link}" target="_blank" rel="noopener noreferrer">Read article &rarr;</a>
         </div>
       </div>`;
 }
 
 function buildPlainText(articles, date) {
   const lines = [
-    `🚀 DAILY TECH BRIEF — ${date}`,
+    `DAILY TECH BRIEF — ${date}`,
     '='.repeat(50),
     '',
     ...articles.flatMap((a, i) => [
       `${i + 1}. ${a.title}`,
       `   Source: ${a.source}`,
       `   ${a.summary}`,
-      `   🔗 ${a.link}`,
+      `   Read: ${a.link}`,
       '',
     ]),
     '─'.repeat(50),
-    'Powered by Daily Tech News Agent | AI-curated daily digest',
+    'Powered by Daily Tech News Agent | Curated daily digest',
   ];
   return lines.join('\n');
 }

@@ -16,7 +16,7 @@ export async function sendEmail({ html, text }) {
 
     if (!to) throw new Error('EMAIL_TO environment variable is not set');
 
-    const subject = `🚀 Daily Tech Brief – Top News · ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+    const subject = `Daily Tech Brief – Top News · ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
 
     const result = await withRetry(
         async () => {
