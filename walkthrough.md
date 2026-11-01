@@ -18,7 +18,7 @@ An **autonomous AI-powered agent** that runs every day on a cron schedule (via G
 | ---------- | ----------------------------------- | ------------------------------------------------------- |
 | Runtime    | Node.js 20 (ES Modules)             | Async I/O is perfect for parallel HTTP calls            |
 | AI         | Vercel AI SDK + Gemini / OpenRouter | Provider-agnostic SDK; swap models via env var          |
-| Database   | PostgreSQL on InsForge (BaaS)       | Managed Postgres with zero DevOps; handles dedup        |
+| Database   | PostgreSQL on NeonDB                | Managed Postgres with zero DevOps; handles dedup        |
 | Email      | Resend API                          | Developer-first transactional email; generous free tier |
 | Scheduling | GitHub Actions cron                 | Free CI/CD minutes; no server to maintain               |
 | Resilience | Custom exponential-backoff retry    | Every external call is wrapped for reliability          |
@@ -160,7 +160,7 @@ score = keyword_relevance + hacker_news_bonus + recency_bonus
 
 ### 3.5 Database Service — [dbService.js](file:///c:/Users/r7685/OneDrive/Desktop/git/daily-tech-news-agent/src/db/dbService.js)
 
-**Role**: Handles article deduplication and persistence using PostgreSQL (hosted on InsForge).
+**Role**: Handles article deduplication and persistence using PostgreSQL (hosted on NeonDB).
 
 #### Schema
 
@@ -265,7 +265,7 @@ This is a **headless agent**, not a web app. The "UI" is the email itself. This 
 
 The SDK provides a **unified interface** across providers. Switching from Gemini to OpenRouter is a one-line env var change with no code modifications. It also handles streaming, retries, and token counting.
 
-### Why PostgreSQL (InsForge) instead of a JSON file or SQLite?
+### Why PostgreSQL (NeonDB) instead of a JSON file or SQLite?
 
 - **Persistent across runs**: GitHub Actions spins up a fresh VM each run — local files are lost.
 - **Concurrent safety**: If two runs overlap (unlikely but possible), Postgres handles it with `ON CONFLICT`.

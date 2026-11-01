@@ -2,7 +2,7 @@
 
 An automated AI-powered agent that fetches, filters, and summarizes the top tech news daily — delivered straight to your inbox.
 
-**Stack:** Node.js · Vercel AI SDK · Gemini / OpenRouter · Resend · Insforge (PostgreSQL) · GitHub Actions
+**Stack:** Node.js · Vercel AI SDK · Gemini / OpenRouter · Resend · NeonDB (PostgreSQL) · GitHub Actions
 
 ---
 
@@ -15,7 +15,7 @@ daily-tech-news-agent/
 │       └── cron.yml          # GitHub Actions — runs daily at 07:00 UTC
 ├── src/
 │   ├── db/
-│   │   └── dbService.js      # Insforge/PostgreSQL — deduplication + persistence
+│   │   └── dbService.js      # NeonDB/PostgreSQL — deduplication + persistence
 │   ├── services/
 │   │   ├── newsFetcher.js    # RSS + HackerNews API + Reddit API
 │   │   ├── aiService.js      # Vercel AI SDK — filter + summarize
@@ -49,9 +49,9 @@ cp .env.example .env
 # Edit .env with your actual keys
 ```
 
-### 3. Set Up Database (Insforge)
+### 3. Set Up Database (NeonDB)
 
-1. Go to [https://insforge.dev](https://insforge.dev) and create a free project
+1. Go to [https://neon.com/](https://neon.com) and create a free project
 2. Copy the **PostgreSQL connection string** into `DB_URL` in your `.env`
 3. The agent auto-creates the `articles` table on first run — no migrations needed
 
@@ -106,14 +106,14 @@ Expected output:
 
 Go to **Settings → Secrets and variables → Actions → New repository secret** and add:
 
-| Secret Name      | Value                      |
-| ---------------- | -------------------------- |
-| `AI_PROVIDER`    | `gemini` or `openrouter`   |
-| `AI_API_KEY`     | Your API key               |
-| `RESEND_API_KEY` | Your Resend key            |
-| `EMAIL_FROM`     | `news@yourdomain.com`      |
-| `EMAIL_TO`       | Your email address         |
-| `DB_URL`         | Insforge connection string |
+| Secret Name      | Value                    |
+| ---------------- | ------------------------ |
+| `AI_PROVIDER`    | `gemini` or `openrouter` |
+| `AI_API_KEY`     | Your API key             |
+| `RESEND_API_KEY` | Your Resend key          |
+| `EMAIL_FROM`     | `news@yourdomain.com`    |
+| `EMAIL_TO`       | Your email address       |
+| `DB_URL`         | NeonDB connection string |
 
 ### Optional Variables (Settings → Variables)
 
@@ -217,4 +217,4 @@ TRUNCATE articles;
 → Check Resend dashboard for delivery status. Ensure `EMAIL_FROM` domain is verified in Resend.
 
 **Database connection error**
-→ Ensure `DB_URL` includes `?sslmode=require` if your Insforge instance requires SSL.
+→ Ensure `DB_URL` includes `?sslmode=require` if your NeonDB instance requires SSL.
